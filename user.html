@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication Reminder</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, pink, rgb(73, 73, 143));
+            color: #333;
+        }
+
+        header {
+            background-color: rgb(52, 52, 134);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .personal-message {
+            background: #e8e8f5;
+            padding: 1rem;
+            text-align: center;
+            font-style: italic;
+            font-size: 1rem;
+        }
+
+        .username {
+            color: #2e427d;
+            font-weight: bold;
+        }
+
+        form {
+            padding: 2rem;
+            display: grid;
+            grid-gap: 1.5rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input:focus, select:focus {
+            border-color: #af4c72;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(76, 152, 175, 0.5);
+        }
+
+        button {
+            background: rgb(132, 49, 62);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: rgb(52, 52, 136);
+        }
+
+        .reminders {
+            padding: 2rem;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .reminder-item {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .reminder-item h3 {
+            margin-top: 0;
+            color: pink;
+        }
+
+        .reminder-item p {
+            margin: 0.5rem 0;
+        }
+
+        .reminder-item button {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .reminder-item button:first-of-type {
+            background: rgb(80, 80, 201);
+            margin-right: 0.5rem;
+        }
+
+        .reminder-item button:first-of-type:hover {
+            background: pink;
+        }
+
+        .reminder-item button:last-of-type {
+            background: #e57373;
+        }
+
+        .reminder-item button:last-of-type:hover {
+            background: #ef5350;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Medication Reminder</h1>
+    </header>
+    <main>
+        <div class="personal-message">
+            Hi <span class="username" id="username">there</span>! Stay healthy by keeping up with your medications.
+        </div>
+
+        <form id="reminder-form">
+            <label for="disease">Disease:</label>
+            <select id="disease" name="disease">
+                <option value="general">General</option>
+                <option value="fever">Fever</option>
+                <option value="diabetes">Diabetes</option>
+                <option value="hypertension">Hypertension</option>
+                <option value="pain">Pain</option>
+            </select>
+
+            <label for="medication">Medication Name:</label>
+            <input type="text" id="medication" name="medication" placeholder="e.g., Aspirin" required>
+
+            <label for="dosage">Dosage:</label>
+            <input type="text" id="dosage" name="dosage" placeholder="e.g., 2 tablets" required>
+
+            <label for="frequency">Frequency:</label>
+            <select id="frequency" name="frequency">
+                <option value="once">Once Daily</option>
+                <option value="twice">Twice Daily</option>
+                <option value="thrice">Thrice Daily</option>
+            </select>
+
+            <label for="time">Reminder Time:</label>
+            <input type="time" id="time" name="time" required>
+
+            <label for="expiry">Expiration Date:</label>
+            <input type="date" id="expiry" name="expiry" required>
+
+            <button type="submit">Add Reminder</button>
+        </form>
+
+        <div class="reminders" id="reminders"></div>
+    </main>
+
+    <script>
+        const form = document.getElementById('reminder-form');
+        const remindersDiv = document.getElementById('reminders');
+        const usernameElement = document.getElementById('username');
+
+        // Prompt user for their name
+        const username = prompt("What's your name?") || "there";
+        usernameElement.textContent = username;
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get user input
+            const disease = document.getElementById('disease').value;
+            const medication = document.getElementById('medication').value;
+            const dosage = document.getElementById('dosage').value;
+            const frequency = document.getElementById('frequency').value;
+            const time = document.getElementById('time').value;
+            const expiry = document.getElementById('expiry').value;
+
+            // Create a reminder item
+            const reminderItem = document.createElement('div');
+            reminderItem.classList.add('reminder-item');
+            reminderItem.innerHTML = `
+                <h3>${medication}</h3>
+                <p><strong>Disease:</strong> ${disease}</p>
+                <p><strong>Dosage:</strong> ${dosage}</p>
+                <p><strong>Frequency:</strong> ${frequency}</p>
+                <p><strong>Time:</strong> ${time}</p>
+                <p><strong>Expires On:</strong> ${expiry}</p>
+                <button onclick="alert('Reminder set for ${medication} at ${time}, ${username}! Stay consistent!')">Acknowledge</button>
+                <button onclick="this.parentElement.remove()">Delete Reminder</button>
+            `;
+
+            // Add reminder to the reminders list
+            remindersDiv.appendChild(reminderItem);
+
+            // Clear the form
+            form.reset();
+        });
+    </script>
+</body>
+</html>
